@@ -7,8 +7,8 @@ import datetime
 model = YOLO('yoloCar.pt')
 
 # Define the video files for the trackers
-video_file1 = '/home/zk/Downloads/highway2.mp4'  # Path to video file, 0 for webcam
-video_file2 = '/home/zk/Downloads/highway.mp4'  # Path to video file, 0 for webcam, 1 for external camera
+video_file1 = '/home/pc/Downloads/highway2.mp4'  # Path to video file, 0 for webcam
+video_file2 = '/home/pc/Downloads/highway.mp4'  # Path to video file, 0 for webcam, 1 for external camera
 
 video1 = cv2.VideoCapture(video_file1)  # Read the video file
 video2 = cv2.VideoCapture(video_file2)  # Read the video file
@@ -24,7 +24,7 @@ while True:
     
     frame = np.concatenate((frame1, frame2), axis=1)
     # Track objects in frames if available
-    results = model.track(frame, persist=True, conf=0.3, iou=0.5, tracker="bytetrack.yaml")
+    results = model.track(frame, persist=True, conf=0.3, iou=0.5, tracker="botsort.yaml")
     res_plotted = results[0].plot()
 
     cv2.putText(res_plotted, f"Total vehicles: {len(results[0])}", (50, 100),
@@ -36,7 +36,7 @@ while True:
     fps = f"FPS: {1 / (end - start).total_seconds():.2f}"
     cv2.putText(res_plotted, fps, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4)
 
-    res_plotted = cv2.resize(res_plotted, (1280, 540))  
+    res_plotted = cv2.resize(res_plotted, (1500, 540))  
     cv2.imshow(f"frame", res_plotted)
 
     key = cv2.waitKey(1)

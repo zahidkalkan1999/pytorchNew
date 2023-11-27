@@ -6,12 +6,12 @@ import pickle
 
 #CLASSES = pickle.loads(open("coco_labels.pickle", "rb").read())
 CLASSES = ['bus', 'car', 'motorbike', 'person', 'truck']
-CONFIDENCE_THRESHOLD = 0.3
+CONFIDENCE_THRESHOLD = 0.7
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 # initialize the video capture object
-video_cap = cv2.VideoCapture('/home/zk/Downloads/car2.mp4')
+video_cap = cv2.VideoCapture('/home/pc/Downloads/highway.mp4')
 # initialize the video writer object
 
 # load the pre-trained YOLOv8n model
@@ -74,20 +74,20 @@ while True:
             ltrb[1]), int(ltrb[2]), int(ltrb[3])
         # draw the bounding box and the track id
         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), GREEN, 2)
-        cv2.rectangle(frame, (xmin, ymin - 20), (xmin + 80, ymin), GREEN, -1)
+        cv2.rectangle(frame, (xmin, ymin - 40), (xmin + 150, ymin), GREEN, -1)
         cv2.putText(frame, f"ID:{track_id}-", (xmin + 5, ymin - 8),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
         
         #for coco labels
         #cv2.putText(frame, CLASSES.get(label[2]), (xmin + 30, ymin - 8),
 		#cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
 
         #for custom labels
-        cv2.putText(frame, CLASSES[label[2]], (xmin + 50, ymin - 8),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
+        cv2.putText(frame, CLASSES[label[2]], (xmin + 110, ymin - 8),
+		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
 
-        cv2.putText(frame, f"conf: {label[1]:.2f}", (xmin + 90, ymin - 8),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
+        cv2.putText(frame, f"conf: {label[1]:.2f}", (xmin + 160, ymin - 8),
+		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
         numOfObj = numOfObj + 1 
     # end time to compute the fps
     end = datetime.datetime.now()
@@ -95,10 +95,10 @@ while True:
     # calculate the frame per second and draw it on the frame
     fps = f"FPS: {1 / (end - start).total_seconds():.2f}"
     cv2.putText(frame, fps, (50, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4)
+                cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 8)
     
     cv2.putText(frame, f"Total: {numOfObj}", (50, 100),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
     # show the frame to our screen
     frame = cv2.resize(frame, (1280, 720))  
     cv2.imshow("Frame", frame)

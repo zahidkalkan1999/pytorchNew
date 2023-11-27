@@ -6,7 +6,7 @@ import datetime
 model = YOLO('yoloCar.pt')
 
 # Open the video file
-cap = cv2.VideoCapture('/home/zk/Downloads/car5.mp4')
+cap = cv2.VideoCapture('/home/pc/Downloads/highway.mp4')
 
 # Loop through the video frames
 while cap.isOpened():
@@ -17,7 +17,7 @@ while cap.isOpened():
     if success:
         #frame = cv2.resize(frame, (1920, 1080))  
         # Run YOLOv8 tracking on the frame, persisting tracks between frames
-        results = model.track(frame, persist=True, conf=0.3, iou=0.5, tracker="botsort.yaml")
+        results = model.track(frame, persist=True, conf=0.7, iou=0.5, tracker="bytetrack.yaml")
         # Visualize the results on the frame
         annotated_frame = results[0].plot()
 

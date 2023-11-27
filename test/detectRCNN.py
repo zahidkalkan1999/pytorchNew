@@ -1,6 +1,6 @@
 # import the necessary packages
 import sys
-sys.path.append("/home/zk/pytorch/pytorchlast/")
+sys.path.append("/home/pc/pytorchNew/")
 from utils.RCNNmodel import create_model
 
 import datetime
@@ -55,7 +55,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 
 model.eval()
 
-video_cap = cv2.VideoCapture('/home/zk/Downloads/car5.mp4')
+video_cap = cv2.VideoCapture('/home/pc/Downloads/highway.mp4')
 
 while True:
 	start = datetime.datetime.now()
@@ -94,22 +94,22 @@ while True:
 		(xmin, ymin, xmax, ymax) = box.astype("int")
 		class_id = int(detections["labels"][i])
 
-		cv2.rectangle(orig, (xmin, ymin), (xmax, ymax), GREEN, 2)
-		cv2.rectangle(orig, (xmin, ymin - 20), (xmin + 80, ymin), GREEN, -1)
+		cv2.rectangle(orig, (xmin, ymin), (xmax, ymax), GREEN, 4)
+		cv2.rectangle(orig, (xmin, ymin - 40), (xmin + 120, ymin), GREEN, -1)
 		cv2.putText(orig, CLASSES[class_id], (xmin + 5, ymin - 8),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
+		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
 
 		cv2.putText(orig, f"%{100*confidence:.2f}", (xmin + 120, ymin - 8),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2)
+		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
 
 		num = num + 1
-	cv2.putText(orig, str(num), (50, 100),
+	cv2.putText(orig, f"#objects:{num}", (50, 100),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 	# end time to compute the fps
 	end = datetime.datetime.now()
 	# calculate the frame per second and draw it on the frame
 	fps = f"FPS: {1 / (end - start).total_seconds():.2f}"
-	cv2.putText(orig, fps, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4)
+	cv2.putText(orig, fps, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 8)
 
 	# show the frame to our screen
 	orig = cv2.resize(orig, (1280, 720))  
