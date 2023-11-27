@@ -4,6 +4,20 @@ import cv2
 from deep_sort_realtime.deepsort_tracker import DeepSort
 import pickle
 
+count=0
+
+cy1=600
+cy2=800
+
+offset=6
+
+vh_down={}
+counter_down=[]
+
+
+vh_up={}
+counter_up=[]
+
 #CLASSES = pickle.loads(open("coco_labels.pickle", "rb").read())
 CLASSES = ['bus', 'car', 'motorbike', 'person', 'truck']
 CONFIDENCE_THRESHOLD = 0.7
@@ -11,11 +25,11 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 # initialize the video capture object
-video_cap = cv2.VideoCapture('/home/pc/Downloads/highway.mp4')
+video_cap = cv2.VideoCapture('highway.mp4')
 # initialize the video writer object
 
 # load the pre-trained YOLOv8n model
-model = YOLO("yoloCar.pt")
+model = YOLO("yolov8l.pt")
 tracker = DeepSort(max_age=25)
 
 while True:
@@ -72,7 +86,30 @@ while True:
 
         xmin, ymin, xmax, ymax = int(ltrb[0]), int(
             ltrb[1]), int(ltrb[2]), int(ltrb[3])
+        
+
         # draw the bounding box and the track id
+        cx=int(xmin+xmax)/2
+        cy=int(ymin+ymax)/2    
+
+        if cy1<(cy+offset) and cy1 > (cy-offset):
+           vh_down[track_id] = track_id  
+
+        if track_id in vh_down:       
+            if cy2<(cy+offset) and cy2 > (cy-offset):
+                if counter_down.count(id)==0:
+                    counter_down.append(track_id)
+                
+        #####going UP#####     
+        if cy2<(cy+offset) and cy2 > (cy-offset):
+           vh_up[track_id] = track_id  
+
+        if track_id in vh_up:
+           if cy1<(cy+offset) and cy1 > (cy-offset):
+
+                if counter_up.count(track_id)==0:
+                    counter_up.append(track_id)      
+
         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), GREEN, 2)
         cv2.rectangle(frame, (xmin, ymin - 40), (xmin + 150, ymin), GREEN, -1)
         cv2.putText(frame, f"ID:{track_id}-", (xmin + 5, ymin - 8),
@@ -95,10 +132,16 @@ while True:
     # calculate the frame per second and draw it on the frame
     fps = f"FPS: {1 / (end - start).total_seconds():.2f}"
     cv2.putText(frame, fps, (50, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 8)
-    
-    cv2.putText(frame, f"Total: {numOfObj}", (50, 100),
                 cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
+    
+    cv2.putText(frame, f"#objects: {numOfObj}", (50, 100),
+                cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3)
+    
+    cv2.line(frame,(100,cy2),(1800,cy2),(255,255,255),3)
+    cv2.line(frame,(100,cy1),(1800,cy1),(255,255,255),3)
+
+    cv2.putText(frame,('goingdown:-')+str(len(counter_down)),(60,140),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
+    cv2.putText(frame,('goingup:-')+str(len(counter_up)),(60,180),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
     # show the frame to our screen
     frame = cv2.resize(frame, (1280, 720))  
     cv2.imshow("Frame", frame)
