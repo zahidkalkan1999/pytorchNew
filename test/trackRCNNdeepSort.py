@@ -33,8 +33,12 @@ CLASSES = [
 'bus', 'car', 'motorbike', 'person', 'truck'
 ]
 
-COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
-
+colors = []
+i = 64
+while i > 0:
+    colors.append(list(np.random.random(size=3) * 256))
+    i = i - 1
+	
 CONFIDENCE_THRESHOLD = 0.95
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
@@ -125,18 +129,16 @@ while True:
 		cv2.putText(orig, f"ID:{track_id}", (xmin + 5, ymin - 8),
 		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
 		#for coco labels
-		#cv2.putText(orig, CLASSES.get(result[2]), (xmin + 60, ymin - 8),
+		#cv2.putText(orig,  f"ID:{track_id} " + CLASSES.get(result[2]) + f" {result[1]:.2f}", (xmin + 5, ymin - 8),
 		#for custom model
-		cv2.putText(orig, CLASSES[result[2]], (xmin + 60, ymin - 8),
-		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
-		cv2.putText(orig, f"%{100*result[1]:.2f}", (xmin + 120, ymin - 8),
+		cv2.putText(orig, f"ID:{track_id} " + CLASSES[result[2]] + f" {result[1]:.2f}", (xmin + 5, ymin - 8),
 		cv2.FONT_HERSHEY_SIMPLEX, 1, WHITE, 4)
 
 	# end time to compute the fps
 	end = datetime.datetime.now()
 	# calculate the frame per second and draw it on the frame
 	fps = f"FPS: {1 / (end - start).total_seconds():.2f}"
-	cv2.putText(orig, fps, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 8)
+	cv2.putText(orig, fps, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
 	cv2.putText(orig, str(num), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
 	# show the frame to our screen
 	orig = cv2.resize(orig, (1280, 720))  
